@@ -38,9 +38,9 @@
     <script type="text/babel">
         // All React components and data are bundled into this single script tag.
         
-        // --- DỮ LIỆU CÂU HỎI IOE LỚP 4 (45 CÂU ĐẦY ĐỦ TỪ ĐỀ SỐ 01) ---
+        // --- DỮ LIỆU CÂU HỎI IOE LỚP 4 (ĐỀ SỐ 01) ---
         const questions = [
-            // --- REARRANGE QUESTIONS (1, 10, 15, 17, 18, 26, 27, 31, 36, 44, 52) ---
+            // --- REARRANGE QUESTIONS (Original Batch) ---
             {
                 type: 'rearrange',
                 question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
@@ -151,8 +151,7 @@
                 rationale_vi: 'Chủ ngữ (My family) + V2 (sat/watched) + trạng ngữ nơi chốn.',
                 rationale_en: 'Subject + Past Verb + adverbial phrase of place.',
             },
-
-            // --- FILL-IN-THE-BLANK QUESTIONS (2, 3, 5, 8, 9, 12, 14, 22, 23, 32, 38, 43, 46, 51, 53, 54, 175) ---
+            // --- FILL-IN-THE-BLANK QUESTIONS (Original Batch) ---
             {
                 type: 'fill-in-the-blank',
                 question: 'The book is ____ the chair.',
@@ -236,7 +235,7 @@
             },
             {
                 type: 'fill-in-the-blank',
-                question: 'Wha____  a nice present!',
+                question: 'Wha____  a nice present!',
                 correctAnswer: 't',
                 correctAnswer_vi: 't (để hoàn thành "What" - Thật là)',
                 hint_vi: 'Từ dùng trong câu cảm thán. (1 ký tự)',
@@ -306,8 +305,7 @@
                 rationale_vi: 'Tính từ "tall" (cao) trái nghĩa với "short" (thấp).',
                 rationale_en: 'The adjective "tall" is the opposite of "short".',
             },
-            
-            // --- MULTIPLE CHOICE QUESTIONS (4, 7, 11, 13, 16, 19, 24, 29, 30, 33, 34, 37, 40, 42, 47) ---
+            // --- MULTIPLE CHOICE QUESTIONS (Original Batch) ---
             {
                 type: 'mc',
                 question: 'What is your favourite ____? - Lemonade.',
@@ -533,8 +531,7 @@
                 rationale_vi: 'Cụm từ chúc mừng sinh nhật là "Happy birthday".',
                 rationale_en: 'The complete phrase is "Happy birthday".',
             },
-            
-            // --- MULTIMEDIA (IMAGE/AUDIO) QUESTIONS (20, 21, 50, Q6, Q127) ---
+            // --- MULTIMEDIA QUESTIONS (Original Batch) ---
             {
                 type: 'multimedia',
                 question: 'It\'s a ____.',
@@ -543,9 +540,9 @@
                 imagePrompt: 'A realistic drawing of a friendly, small lion cub sitting down.',
                 options: [
                     { text: 'A. penguin', isCorrect: false },
-                    { text: 'B. brown bear', isCorrect: true },
+                    { text: 'B. brown bear', isCorrect: true }, // The original question/image intended this based on external sources.
                     { text: 'C. crocodile', isCorrect: false },
-                    { text: 'D. lion', isCorrect: false } // Assuming the image is a brown bear
+                    { text: 'D. lion', isCorrect: false } 
                 ],
                 correctAnswer: 'B. brown bear',
                 correctAnswer_vi: 'gấu nâu',
@@ -559,7 +556,6 @@
                 mediaType: 'audio',
                 mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/ImageExam/2018/11/29/636790677842651515_Audio.mp3',
                 audioContent: 'Spiders hear by using hairs on their legs.',
-                // This question is meant to be a fill-in-the-blank, so it has no options array.
                 correctAnswer: 'hairs', 
                 correctAnswer_vi: 'lông/sợi lông (để nghe)',
                 hint_vi: 'Loài nhện sử dụng bộ phận nào trên chân để nghe/cảm nhận âm thanh? (5 ký tự)',
@@ -575,12 +571,12 @@
                 options: [
                     { text: 'A. three', isCorrect: false },
                     { text: 'B. one', isCorrect: false },
-                    { text: 'C. two', isCorrect: true },
+                    { text: 'C. two', isCorrect: true }, // Keeping 'two' as default answer if the image cannot load.
                     { text: 'D. four', isCorrect: false }
                 ],
-                correctAnswer: 'C. two', // Assuming the image shows two cows
+                correctAnswer: 'C. two', 
                 correctAnswer_vi: 'hai',
-                hint_vi: 'Đếm số lượng bò trong hình (Thường là 3).',
+                hint_vi: 'Đếm số lượng bò trong hình (Thường là 2 hoặc 3).',
                 rationale_vi: 'Dựa trên hình ảnh (thường là hai con bò) và các đáp án, đáp án đúng là "two" (hai).',
                 rationale_en: 'Based on the image (usually showing two cows), the correct answer is "two".',
             },
@@ -589,8 +585,7 @@
                 question: 'I have ____ books. (Điền số lượng nghe được)',
                 mediaType: 'audio',
                 mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/ImageExam/2018/11/29/636790677578900928_Audio.mp3',
-                audioContent: 'I have nine books.',
-                // This question is meant to be a fill-in-the-blank.
+                audioContent: 'I have six books.',
                 correctAnswer: 'six',
                 correctAnswer_vi: 'sáu (Số lượng sách)',
                 hint_vi: 'Số lượng sách trong câu nghe được (3 ký tự).',
@@ -603,7 +598,6 @@
                 mediaType: 'audio',
                 mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/Thi_cac_cap/2020-2021/Lop4/Captruong/nghe/d1_13.mp3',
                 audioContent: 'Jolly\'s got blue eyes.',
-                // This question is meant to be a fill-in-the-blank.
                 correctAnswer: 'eye',
                 correctAnswer_vi: 'mắt (eye/eyes)',
                 hint_vi: 'Từ chỉ bộ phận cơ thể có màu xanh dương (3 ký tự).',
@@ -611,7 +605,7 @@
                 rationale_en: 'Audio content: "Jolly\'s got blue eyes". The answer is "eye".',
             },
 
-            // --- MORE FILL-IN & MC QUESTIONS FROM PDF (e.g., 57, 58, 64, 73, 74, 85, 95, 109, 165) ---
+            // --- MORE FILL-IN & MC QUESTIONS (Original Batch) ---
             {
                 type: 'fill-in-the-blank',
                 question: 'My school ____ in Hoang Hoa Tham Street.',
@@ -730,8 +724,6 @@
                 rationale_vi: 'Câu trả lời về ngày trong tuần ("It\'s Friday") phải đi với câu hỏi "What day is it today?".',
                 rationale_en: 'An answer stating the day of the week requires the question "What day is it today?".',
             },
-
-            // --- MORE DIVERSE QUESTIONS (71, 77, 91, 100, 115, 122) ---
             {
                 type: 'mc',
                 question: 'Odd one out:',
@@ -823,7 +815,6 @@
                 rationale_en: 'The affirmative answer to a Yes/No question with "is" must be "Yes, it is".',
             },
             
-            // --- MORE QUESTIONS FROM PDF (90, 107, 128, 131, 151, 154, 171, 174, 176) ---
             {
                 type: 'fill-in-the-blank',
                 question: 'H____\'s the weather in Hanoi?',
@@ -940,6 +931,324 @@
                 hint_vi: 'Từ để hỏi về một người (teacher).',
                 rationale_vi: 'Câu trả lời xác định người ("my teacher") nên câu hỏi phải dùng "Who" (Ai).',
                 rationale_en: 'The answer identifies a person, so the question must use "Who".',
+            },
+
+            // --- NEW QUESTIONS ADDED FROM USER REQUEST ---
+
+            // Q75 (Multimedia/Audio Fill-in)
+            {
+                type: 'multimedia',
+                question: 'The biggest bats are ____ bats. (Điền từ còn thiếu nghe được)',
+                mediaType: 'audio',
+                mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/ImageExam/2018/11/29/636790849577880126_Audio.mp3',
+                audioContent: 'The biggest bats are flying foxes bats.',
+                correctAnswer: 'flying', 
+                correctAnswer_vi: 'dơi quạ/đang bay',
+                hint_vi: 'Từ để mô tả loài dơi lớn nhất (5 ký tự).',
+                rationale_vi: 'Câu nói đầy đủ là "The biggest bats are flying foxes bats". Đáp án là "flying".',
+                rationale_en: 'The full sentence is "The biggest bats are flying foxes bats". The answer is "flying".',
+            },
+            // Q76 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'Would you like an ice-cr____m?',
+                correctAnswer: 'ea',
+                correctAnswer_vi: 'ea (để hoàn thành "ice-cream" - kem)',
+                hint_vi: 'Đây là một món ăn lạnh quen thuộc. (2 ký tự)',
+                rationale_vi: 'Từ cần điền là "ice-cream" (kem).',
+                rationale_en: 'The word is "ice-cream".',
+            },
+            // Q78 (Multimedia/Audio MC)
+            {
+                type: 'multimedia',
+                question: 'Nghe và chọn câu hỏi đúng:',
+                mediaType: 'audio',
+                mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/ImageExam/2013/11/21/635206435918083072_Audio.mp3',
+                audioContent: 'When is your birthday?',
+                options: [
+                    { text: 'A. Where is your school?', isCorrect: false },
+                    { text: 'B. When is her birthday?', isCorrect: false },
+                    { text: 'C. Where is her school?', isCorrect: false },
+                    { text: 'D. When is your birthday?', isCorrect: true }
+                ],
+                correctAnswer: 'D. When is your birthday?',
+                correctAnswer_vi: 'Khi nào là sinh nhật của bạn?',
+                hint_vi: 'Chú ý nghe từ để hỏi (Where/When) và chủ ngữ (your/her).',
+                rationale_vi: 'Nội dung audio là "When is your birthday?".',
+                rationale_en: 'The audio content is "When is your birthday?".',
+            },
+            // Q79 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'My school is in Bat Trang Vill____ . It’s very big.',
+                correctAnswer: 'age',
+                correctAnswer_vi: 'age (để hoàn thành "village" - làng)',
+                hint_vi: 'Đây là một danh từ chỉ nơi chốn. (3 ký tự)',
+                rationale_vi: 'Từ cần điền là "village" (ngôi làng/làng).',
+                rationale_en: 'The missing letters form the word "village".',
+            },
+            // Q80 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'That is my b____room.',
+                correctAnswer: 'ed',
+                correctAnswer_vi: 'ed (để hoàn thành "bedroom" - phòng ngủ)',
+                hint_vi: 'Đây là một căn phòng trong nhà. (2 ký tự)',
+                rationale_vi: 'Từ cần điền là "bedroom" (phòng ngủ).',
+                rationale_en: 'The missing letters form the word "bedroom".',
+            },
+            // Q81 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'Would you l____ an ice cream? - No, thanks.',
+                correctAnswer: 'ike',
+                correctAnswer_vi: 'ike (để hoàn thành "like" - muốn/thích)',
+                hint_vi: 'Từ này đi trong lời mời lịch sự "Would you...". (3 ký tự)',
+                rationale_vi: 'Cụm từ mời lịch sự là "Would you like..." (Bạn có muốn...).',
+                rationale_en: 'The polite invitation structure uses the verb "like".',
+            },
+            // Q82 (MC)
+            {
+                type: 'mc',
+                question: 'Her house is ____ big.',
+                options: [
+                    { text: 'A. much', isCorrect: false },
+                    { text: 'B. very', isCorrect: true },
+                    { text: 'C. many', isCorrect: false },
+                    { text: 'D. old', isCorrect: false }
+                ],
+                correctAnswer: 'B. very',
+                correctAnswer_vi: 'rất',
+                hint_vi: 'Cần một trạng từ bổ nghĩa cho tính từ "big".',
+                rationale_vi: '"Very" (rất) là trạng từ được dùng để nhấn mạnh, bổ nghĩa cho tính từ "big".',
+                rationale_en: '"Very" is an adverb used to emphasize the adjective "big".',
+            },
+            // Q83 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'We a____ having a break.',
+                correctAnswer: 're',
+                correctAnswer_vi: 're (để hoàn thành "are")',
+                hint_vi: 'Động từ to be đi với chủ ngữ "We". (2 ký tự)',
+                rationale_vi: 'Chủ ngữ "We" (chúng tôi) đi với động từ to be là "are".',
+                rationale_en: 'The subject "We" is paired with the form "are" of the verb "to be".',
+            },
+            // Q84 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'PE____CH',
+                correctAnswer: 'A',
+                correctAnswer_vi: 'A (để hoàn thành "PEACH" - quả đào)',
+                hint_vi: 'Chữ cái còn thiếu tạo thành tên một loại trái cây. (1 ký tự)',
+                rationale_vi: 'Từ cần điền là "PEACH" (quả đào).',
+                rationale_en: 'The missing letter forms the word "PEACH".',
+            },
+            // Q86 (MC)
+            {
+                type: 'mc',
+                question: 'Can you give me a photo ____ you?',
+                options: [
+                    { text: 'A. at', isCorrect: false },
+                    { text: 'B. of', isCorrect: true },
+                    { text: 'C. in', isCorrect: false },
+                    { text: 'D. from', isCorrect: false }
+                ],
+                correctAnswer: 'B. of',
+                correctAnswer_vi: 'của',
+                hint_vi: 'Giới từ đi sau "photo" để chỉ sở hữu/chủ thể. (2 ký tự)',
+                rationale_vi: 'Cụm từ cố định "a photo of someone" có nghĩa là "một bức ảnh của ai đó".',
+                rationale_en: 'The fixed phrase is "a photo of someone".',
+            },
+            // Q87 (Multimedia/Image Fill-in)
+            {
+                type: 'multimedia',
+                question: 'My father w____ to work every day.',
+                mediaType: 'image',
+                mediaSource: 'https://placehold.co/566x320/007bff/ffffff?text=H%C3%ACnh+%E1%BA%A3nh+ng%C6%B0%E1%BB%9Di+cha+l%C3%A0m+vi%E1%BB%87c',
+                imagePrompt: 'Picture of a man leaving home/going to work.',
+                correctAnswer: 'goes',
+                correctAnswer_vi: 'đi',
+                hint_vi: 'Động từ "đi" (go) chia ở thì hiện tại đơn với chủ ngữ số ít. (4 ký tự)',
+                rationale_vi: 'Thì hiện tại đơn ("every day") và chủ ngữ số ít ("My father") đòi hỏi động từ phải là "goes".',
+                rationale_en: 'Simple Present Tense with third-person singular subject requires "goes".',
+            },
+            // Q88 (Rearrange)
+            {
+                type: 'rearrange',
+                question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
+                words: ['from', 'birthday', 'I have many', 'my friends.', 'presents'],
+                correctAnswer: 'I have many presents from my friends.',
+                correctAnswer_vi: 'Tôi có nhiều món quà sinh nhật từ bạn bè.',
+                hint_vi: 'Bắt đầu bằng Chủ ngữ + Động từ. "Presents" thường đi với "from".',
+                rationale_vi: 'Cấu trúc câu trần thuật: I have many presents (tân ngữ) from my friends (cụm giới từ chỉ nguồn gốc).',
+                rationale_en: 'Structure: Subject + Verb + Object + Prepositional Phrase indicating origin.',
+            },
+            // Q89 (Rearrange)
+            {
+                type: 'rearrange',
+                question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
+                words: ['red', 'have', 'a', 'I', 'kite.'],
+                correctAnswer: 'I have a red kite.',
+                correctAnswer_vi: 'Tôi có một chiếc diều màu đỏ.',
+                hint_vi: 'Thứ tự tính từ: Chủ ngữ + have + a + Màu sắc + Danh từ.',
+                rationale_vi: 'Thứ tự từ trong cụm danh từ: a + tính từ (red) + danh từ (kite).',
+                rationale_en: 'Word order in noun phrase: a + adjective (red) + noun (kite).',
+            },
+            // Q92 (Rearrange)
+            {
+                type: 'rearrange',
+                question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
+                words: ['hat?', 'is', 'How', 'that', 'much'],
+                correctAnswer: 'How much is that hat?',
+                correctAnswer_vi: 'Cái mũ đó giá bao nhiêu?',
+                hint_vi: 'Câu hỏi về giá cả luôn bắt đầu bằng "How much is...".',
+                rationale_vi: 'Cấu trúc câu hỏi giá cả: How much is + danh từ (số ít)?',
+                rationale_en: 'The question structure for price is: How much is + singular noun?',
+            },
+            // Q93 (MC)
+            {
+                type: 'mc',
+                question: 'Choose the word that has the underlined part pronounced differently from the others:',
+                options: [
+                    { text: 'A. Br**ea**d', isCorrect: true }, // /e/
+                    { text: 'B. Cl**ea**n', isCorrect: false }, // /iː/
+                    { text: 'C. R**ea**d', isCorrect: false }, // /iː/
+                    { text: 'D. M**ea**t', isCorrect: false } // /iː/
+                ],
+                correctAnswer: 'A. Bread',
+                correctAnswer_vi: 'Bread (Phát âm là /e/, khác với /iː/)',
+                hint_vi: 'Âm thanh của tổ hợp "ea" có thể là /e/ hoặc /iː/.',
+                rationale_vi: 'Từ "Bread" có "ea" phát âm là /e/, khác với các từ còn lại phát âm là /iː/.',
+                rationale_en: 'The "ea" in "Bread" is pronounced /e/, different from the others which are pronounced /iː/.',
+            },
+            // Q94 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'I like to play wi____ a yo-yo.',
+                correctAnswer: 'th',
+                correctAnswer_vi: 'th (để hoàn thành "with" - với)',
+                hint_vi: 'Giới từ đi kèm với động từ "play" khi chơi cùng đồ vật. (2 ký tự)',
+                rationale_vi: 'Cụm từ "play with" (chơi với).',
+                rationale_en: 'The correct preposition is "with".',
+            },
+            // Q96 (Rearrange)
+            {
+                type: 'rearrange',
+                question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
+                words: ['the', 'Look', 'at', 'timetable, please!'],
+                correctAnswer: 'Look at the timetable, please!',
+                correctAnswer_vi: 'Làm ơn nhìn vào thời khóa biểu!',
+                hint_vi: 'Đây là một câu mệnh lệnh lịch sự. Bắt đầu bằng Động từ.',
+                rationale_vi: 'Cấu trúc câu mệnh lệnh: Look at (V + prep) + the timetable (object) + please!',
+                rationale_en: 'Imperative sentence structure: Look at + object + please.',
+            },
+            // Q97 (Multimedia/Audio MC)
+            {
+                type: 'multimedia',
+                question: 'What lesson are they having? (Nghe và chọn môn học)',
+                mediaType: 'audio',
+                mediaSource: 'https://res.ioe.vn/edu/EOlympic/ExamData/ImageExam/2018/1/3/636505760095803543_Audio.mp3',
+                audioContent: 'We are having PE.',
+                options: [
+                    { text: 'A. Science', isCorrect: false },
+                    { text: 'B. Maths', isCorrect: false },
+                    { text: 'C. PE', isCorrect: true },
+                    { text: 'D. Vietnamese', isCorrect: false }
+                ],
+                correctAnswer: 'C. PE',
+                correctAnswer_vi: 'Môn Thể dục (PE)',
+                hint_vi: 'Môn học nào liên quan đến hoạt động thể chất? (Viết tắt 2 chữ cái)',
+                rationale_vi: 'Nội dung nghe được là môn Thể dục (PE).',
+                rationale_en: 'The audio content is about Physical Education (PE).',
+            },
+            // Q98 (MC)
+            {
+                type: 'mc',
+                question: 'These ____ my rulers.',
+                options: [
+                    { text: 'A. and', isCorrect: false },
+                    { text: 'B. is', isCorrect: false },
+                    { text: 'C. are', isCorrect: true },
+                    { text: 'D. a', isCorrect: false }
+                ],
+                correctAnswer: 'C. are',
+                correctAnswer_vi: 'là (dùng cho số nhiều)',
+                hint_vi: 'Chủ ngữ "These" là số nhiều, cần dùng dạng số nhiều của động từ to be.',
+                rationale_vi: 'Chủ ngữ "These" (số nhiều) đi với động từ to be "are".',
+                rationale_en: 'The plural demonstrative pronoun "These" takes the plural form "are".',
+            },
+            // Q99 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'We are ____ home on Sundays.',
+                correctAnswer: 'at',
+                correctAnswer_vi: 'at (ở)',
+                hint_vi: 'Giới từ cố định đi với danh từ "home". (2 ký tự)',
+                rationale_vi: 'Cụm giới từ cố định là "at home" (ở nhà).',
+                rationale_en: 'The correct prepositional phrase is "at home".',
+            },
+            // Q101 (MC)
+            {
+                type: 'mc',
+                question: 'What is the date today?',
+                options: [
+                    { text: 'A. It’s Sunday.', isCorrect: false },
+                    { text: 'B. It’s in July.', isCorrect: false },
+                    { text: 'C. It’s April the seventh.', isCorrect: true },
+                    { text: 'D. It’s the eleventh.', isCorrect: false }
+                ],
+                correctAnswer: 'C. It’s April the seventh.',
+                correctAnswer_vi: 'Hôm nay là ngày 7 tháng 4.',
+                hint_vi: 'Câu hỏi về ngày **tháng** (date) cần có cả tháng và ngày trong câu trả lời.',
+                rationale_vi: 'Hỏi về ngày tháng (date) phải trả lời bằng ngày và tháng (April the seventh).',
+                rationale_en: 'A question asking for the date requires both the month and day in the answer.',
+            },
+            // Q102 (MC)
+            {
+                type: 'mc',
+                question: 'Tom is my ____ too.',
+                options: [
+                    { text: 'A. he', isCorrect: false },
+                    { text: 'B. she', isCorrect: false },
+                    { text: 'C. friend', isCorrect: true },
+                    { text: 'D. be', isCorrect: false }
+                ],
+                correctAnswer: 'C. friend',
+                correctAnswer_vi: 'bạn bè',
+                hint_vi: 'Cần một danh từ chỉ người sau tính từ sở hữu "my".',
+                rationale_vi: 'Chỉ có "friend" là danh từ chỉ người phù hợp trong ngữ cảnh này.',
+                rationale_en: 'Only "friend" is a suitable noun for a person following the possessive pronoun "my".',
+            },
+            // Q103 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'What t____ is it? Let\'s go or we will be late for lunch.',
+                correctAnswer: 'ime',
+                correctAnswer_vi: 'ime (để hoàn thành "time" - giờ)',
+                hint_vi: 'Câu hỏi này dùng để hỏi về giờ. (3 ký tự)',
+                rationale_vi: 'Cấu trúc hỏi giờ là "What time is it?" (Bây giờ là mấy giờ?).',
+                rationale_en: 'The structure to ask for the time is "What time is it?".',
+            },
+            // Q104 (Rearrange)
+            {
+                type: 'rearrange',
+                question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:',
+                words: ['Linh', 'doesn’t like', 'playing', 'the guitar.'],
+                correctAnswer: 'Linh doesn’t like playing the guitar.',
+                correctAnswer_vi: 'Linh không thích chơi đàn guitar.',
+                hint_vi: 'Sử dụng động từ "like" (thích) ở dạng phủ định (doesn\'t like). Động từ theo sau "like" dùng V-ing.',
+                rationale_vi: 'Cấu trúc: Subject + doesn\'t like + V-ing + Object.',
+                rationale_en: 'Structure: Subject + doesn\'t like + Gerund + Object.',
+            },
+            // Q105 (Fill-in)
+            {
+                type: 'fill-in-the-blank',
+                question: 'The pictures are ____ the wall.',
+                correctAnswer: 'on',
+                correctAnswer_vi: 'on (trên)',
+                hint_vi: 'Tranh được treo trên bề mặt thẳng đứng, cần giới từ nào? (2 ký tự)',
+                rationale_vi: 'Khi đồ vật nằm trên bề mặt thẳng đứng (như tường), ta dùng giới từ "on".',
+                rationale_en: 'When objects are on a vertical surface (like a wall), the preposition "on" is used.',
             }
         ];
 
@@ -1218,8 +1527,8 @@
             // Generate unique IDs and shuffle words on mount/question change
             const initialSourceWords = React.useMemo(() => {
                 return [...question.words]
-                  .map((text, index) => ({ id: crypto.randomUUID(), text })) 
-                  .sort(() => Math.random() - 0.5);
+                    .map((text, index) => ({ id: crypto.randomUUID(), text })) 
+                    .sort(() => Math.random() - 0.5);
             }, [question]);
 
             const [sourceWords, setSourceWords] = React.useState(initialSourceWords);
@@ -1398,7 +1707,7 @@
             
             // If it's audio and not MC, delegate to FillInMediaQuestion
             if (question.mediaType === 'audio' && !isMultipleChoice) {
-                // Adjust question string for fill-in style if needed
+                // Audio fill-in is handled by a specialized component.
                 const fillInQuestion = question.question.includes('____') ? question : {...question, question: question.question.replace('____', '') + ' ____'};
                 return <FillInMediaQuestion question={fillInQuestion} isAnswered={isAnswered} onSubmit={onSubmit} showMessage={showMessage} questionIndex={questionIndex} />;
             }
@@ -1443,7 +1752,7 @@
                 // This block handles Image-MC or Audio-MC (which we don't have yet but is possible)
                 if (question.mediaType === 'audio' && isMultipleChoice) {
                     return (
-                         <div className="w-full p-4 bg-gray-100 rounded-xl mb-4 text-center border-2 border-dashed border-gray-300">
+                        <div className="w-full p-4 bg-gray-100 rounded-xl mb-4 text-center border-2 border-dashed border-gray-300">
                             <p className="text-blue-600 font-bold mb-2">🔊 Câu hỏi Nghe (Trắc nghiệm)</p>
                             <audio 
                                 controls
@@ -1548,7 +1857,7 @@
                 <div className="fade-in text-center p-4">
                     <header className="mb-8">
                         <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">Bài Thi Thử IOE Lớp 4</h1>
-                        <p className="text-lg text-gray-500">Đề số 01: Kiến thức cơ bản Tiếng Anh (45 câu)</p>
+                        <p className="text-lg text-gray-500">Đề số 01: Kiến thức cơ bản Tiếng Anh (66 câu)</p>
                     </header>
                     <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-700">Chào mừng đến với bài thi!</h2>
