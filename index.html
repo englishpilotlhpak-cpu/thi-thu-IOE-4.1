@@ -31,22 +31,16 @@
             align-items: center;
             justify-content: center;
         }
+        audio {
+            filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) brightness(90%);
+        }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "react/": "https://aistudiocdn.com/react@^19.1.1/"
-  }
-}
-</script>
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-800">
     <div id="root"></div>
 
     <script type="text/babel">
-        // --- DỮ LIỆU CÂU HỎI ---
+        // --- DỮ LIỆU CÂU HỎI IOE LỚP 4 (ĐỀ SỐ 01) ---
         const questions = [
             { type: 'rearrange', question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:', words: ['pictures', 'in the classroom.', 'There are', 'eight'], correctAnswer: 'There are eight pictures in the classroom.', correctAnswer_vi: 'Có tám bức tranh trong lớp học.', hint_vi: 'Cấu trúc "There are" (Có) phải đứng đầu câu.', rationale_vi: 'Cấu trúc đúng: There are + số lượng + danh từ + nơi chốn.', rationale_en: 'Correct structure: There are + number + noun + location.' },
             { type: 'rearrange', question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:', words: ['Is it Sunday', 'today?', 'No,', "it's Saturday."], correctAnswer: "Is it Sunday today? No, it's Saturday.", correctAnswer_vi: 'Hôm nay là Chủ Nhật phải không? Không, là thứ Bảy.', hint_vi: 'Đây là câu hỏi Yes/No và câu trả lời rút gọn. Dấu chấm hỏi đứng sau vế hỏi.', rationale_vi: "Phần hỏi: Is it Sunday today? - Phần đáp: No, it's Saturday.", rationale_en: "Question: Is it Sunday today? - Answer: No, it's Saturday." },
@@ -193,31 +187,27 @@
             { type: 'mc', question: 'How’s ____ weather today? - It’s hot today.', options: [ { text: 'A. a', isCorrect: false }, { text: 'B. an', isCorrect: false }, { text: 'C. the', isCorrect: true }, { text: 'D. my', isCorrect: false } ], correctAnswer: 'C. the', correctAnswer_vi: 'mạo từ xác định (the weather)', hint_vi: 'Mạo từ nào đi kèm với "weather"?', rationale_vi: 'Thời tiết là danh từ xác định, thường dùng mạo từ "the": "the weather".', rationale_en: '"Weather" is a specific noun, generally used with the definite article "the".' },
             { type: 'rearrange', question: 'Sắp xếp các từ/cụm từ sau thành câu đúng:', words: ['have', 'daughters?', 'he', 'Does', 'two'], correctAnswer: 'Does he have two daughters?', correctAnswer_vi: 'Anh ấy có hai cô con gái phải không?', hint_vi: 'Câu hỏi Yes/No ở thì Hiện tại đơn với chủ ngữ số ít. (Does + S + V-nguyên mẫu...?)', rationale_vi: 'Cấu trúc câu hỏi hiện tại đơn: Does + Subject + have + Quantity + Noun?', rationale_en: 'Simple Present question structure: Does + Subject + have + Quantity + Noun?' }
         ];
-
-        // --- Component: MediaDisplay ---
+        
+        // --- Component: MediaDisplay (Helper for Image/Audio rendering) ---
         const MediaDisplay = ({ question, showMessage }) => {
-            if (question.type !== 'multimedia') {
-                return null;
-            }
-
             if (question.mediaType === 'image') {
                 return (
                     <div className="w-full p-4 bg-gray-100 rounded-xl mb-4 text-center border-2 border-dashed border-gray-300">
                         <p className="text-blue-600 font-bold mb-2">🖼️ Câu hỏi kèm Hình ảnh</p>
                         <img 
                             src={question.mediaSource}
-                            alt={question.imagePrompt || 'Media for question'} 
+                            alt={`Hình ảnh IOE: ${question.imagePrompt || 'Chủ đề câu hỏi'}`} 
                             className="w-full max-w-xs mx-auto rounded-lg shadow-md border-2 border-gray-300"
                             crossOrigin="anonymous"
                             referrerPolicy="no-referrer"
                             onError={(e) => { 
                                 e.target.onerror = null; 
-                                e.target.src = `https://placehold.co/566x320/FF0000/FFFFFF?text=L%E1%BB%97I+T%E1%BA%A2I+%E1%BA%A2NH`; 
+                                e.target.src = `https://placehold.co/566x320/FF0000/FFFFFF?text=L%E1%BB%97I+T%E1%BA%A2I+%E1%BA%A2NH+(CORS)`; 
                                 showMessage('Lỗi tải ảnh: File media có thể bị chặn bởi trình duyệt.', 'error');
                             }}
                         />
-                        <p className="text-xs text-gray-500 mt-2 break-all">Link: {question.mediaSource}</p>
-                        {question.imagePrompt && <p className="text-sm text-blue-600 mt-2 font-medium">Gợi ý: {question.imagePrompt}</p>}
+                        <p className="text-xs text-gray-500 mt-2 break-all">Link gốc: {question.mediaSource}</p>
+                        {question.imagePrompt && <p className="text-sm text-blue-600 mt-2 font-medium">Gợi ý nội dung: {question.imagePrompt}</p>}
                     </div>
                 );
             }
@@ -233,37 +223,41 @@
                             crossOrigin="anonymous"
                             referrerPolicy="no-referrer"
                             onError={() => {
-                                showMessage('Lỗi tải Audio: File media có thể bị chặn bởi trình duyệt.', 'error');
+                                showMessage('Lỗi tải Audio: File media có thể bị chặn.', 'error');
                             }}
                         >
                             <source src={question.mediaSource} type="audio/mp3" />
                             Trình duyệt của bạn không hỗ trợ phần tử audio.
                         </audio>
-                        <p className="text-xs text-gray-500 mt-2 break-all">Link: {question.mediaSource}</p>
+                        <p className="text-xs text-gray-500 mt-2 break-all">Link gốc: {question.mediaSource}</p>
                     </div>
                 );
             }
             return null;
         }
 
-        // --- Component: ProgressBar ---
-        const ProgressBar = ({ percentage }) => (
-            <div className="w-full h-2 bg-blue-100 rounded-full mt-4 overflow-hidden">
-                <div
-                    className="h-full bg-blue-500 transition-all duration-500 ease-in-out"
-                    style={{ width: `${percentage}%` }}
-                ></div>
-            </div>
-        );
+        // --- Component: ProgressBar.tsx ---
+        const ProgressBar = ({ percentage }) => {
+            return (
+                <div className="w-full h-2 bg-blue-100 rounded-full mt-4 overflow-hidden">
+                    <div
+                        className="h-full bg-blue-500 transition-all duration-500 ease-in-out"
+                        style={{ width: `${percentage}%` }}
+                    ></div>
+                </div>
+            );
+        };
         
-        // --- Component: MessageBox ---
+        // --- Component: MessageBox.tsx ---
         const MessageBox = ({ message, type }) => {
             const [visible, setVisible] = React.useState(false);
 
             React.useEffect(() => {
                 if (message) {
                     setVisible(true);
-                    const timer = setTimeout(() => setVisible(false), 2700);
+                    const timer = setTimeout(() => {
+                        setVisible(false);
+                    }, 2700);
                     return () => clearTimeout(timer);
                 } else {
                     setVisible(false);
@@ -271,17 +265,23 @@
             }, [message, type]);
 
             const baseClasses = "fixed top-4 left-1/2 -translate-x-1/2 p-4 rounded-xl shadow-xl text-center font-bold text-lg z-50 transition-all duration-300 transform";
+            
             const typeClasses = {
                 success: 'bg-green-100 border border-green-500 text-green-800',
                 error: 'bg-red-100 border border-red-500 text-red-800',
                 info: 'bg-yellow-100 border border-yellow-500 text-yellow-800',
             };
+
             const visibilityClasses = visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none';
 
-            return <div className={`${baseClasses} ${typeClasses[type]} ${visibilityClasses}`}>{message}</div>;
+            return (
+                <div className={`${baseClasses} ${typeClasses[type]} ${visibilityClasses}`}>
+                    {message}
+                </div>
+            );
         };
         
-        // --- Component: RationaleBox ---
+        // --- Component: RationaleBox.tsx ---
         const RationaleBox = ({ question, isCorrect, submittedAnswer }) => {
             const boxClasses = `mt-6 p-4 rounded-xl border transition duration-300 fade-in border-l-4 ${
                 isCorrect ? 'bg-green-100 border-green-600' : 'bg-red-100 border-red-600'
@@ -289,14 +289,15 @@
             
             const submittedAnswerDisplay = () => {
                 const isFillIn = question.type === 'fill-in-the-blank' || (question.type === 'multimedia' && !question.options);
-                if (isCorrect && !isFillIn) return null;
+                
+                if(isCorrect && !isFillIn) return null;
                 
                 return (
                     <>
                         <strong className="text-gray-700">
-                            {question.type === 'mc' || question.type === 'multimedia' ? 'Bạn đã chọn/Điền: ' : 'Câu trả lời của bạn: '}
+                           Bạn đã chọn/Điền:
                         </strong>
-                        <span className="text-red-700 font-medium break-words">{submittedAnswer}</span>
+                        <span className="text-red-700 font-medium break-words"> {submittedAnswer}</span>
                         <br/>
                     </>
                 );
@@ -305,29 +306,30 @@
             return (
                 <div className={boxClasses}>
                     <p className="font-bold text-lg mb-2 text-blue-700">Giải thích:</p>
-                    <div className="text-gray-700">
-                        {submittedAnswerDisplay()}
-                        <strong>Đáp án đúng:</strong> <span className="text-green-800 font-semibold">{question.correctAnswer}</span> <br />
+                    <div className="text-gray-700 space-y-1">
+                        {!isCorrect && submittedAnswerDisplay()}
+                        <p><strong>Đáp án đúng:</strong> <span className="text-green-800 font-semibold">{question.correctAnswer}</span></p>
                         
                         {question.correctAnswer_vi && (
-                            <>
-                                <strong>Nghĩa là:</strong> <span className="text-green-600 font-medium">{question.correctAnswer_vi}</span> <br/>
-                            </>
+                            <p><strong>Dịch nghĩa:</strong> <span className="text-green-600 font-medium">{question.correctAnswer_vi}</span></p>
                         )}
-                        <p className="mt-2">{question.rationale_vi || 'Không có giải thích chi tiết.'}</p>
-                    </div>
-                    <div className="text-gray-600 italic mt-2 text-sm border-t border-gray-300 pt-2">
-                        <strong>Rationale:</strong> {question.rationale_en || 'No detailed rationale.'}
+                        <p className="pt-2 border-t border-gray-300 mt-2">{question.rationale_vi || 'Không có giải thích chi tiết.'}</p>
                     </div>
                 </div>
             );
         };
 
-        // --- Component: FillInTheBlankQuestion ---
+        // --- Component: FillInTheBlankQuestion.tsx ---
         const FillInTheBlankQuestion = ({ question, isAnswered, onSubmit, showMessage, questionIndex }) => {
             const [inputValue, setInputValue] = React.useState('');
+            const inputRef = React.useRef(null);
 
-            React.useEffect(() => setInputValue(''), [question]);
+            React.useEffect(() => {
+                setInputValue('');
+                if (inputRef.current && !isAnswered) {
+                    inputRef.current.focus();
+                }
+            }, [question, isAnswered]);
 
             const handleSubmitClick = () => {
                 const trimmedInput = inputValue.trim();
@@ -340,35 +342,46 @@
             };
             
             const questionTextParts = React.useMemo(() => {
-                const text = question.question.replace(/^\d+\.\s*/, '');
-                const blankMarker = '____';
-                const parts = text.includes(blankMarker) ? text.split(blankMarker) : [text, ''];
-                return [parts[0], parts.slice(1).join(blankMarker)];
+                let text = question.question.replace(/^\d+\.\s*/, '');
+                
+                const markers = ['____', '_ _ _ _ _ _ _ _ _', '_ _ _ _ _ _ _ _', '_ _ _ _ _ _ _', '_ _ _ _ _ _', '_ _ _ _ _', '_ _ _ _', '_ _ _', '_ _', '__', '_'];
+
+                for (const marker of markers) {
+                    if (text.includes(marker)) {
+                        const parts = text.split(marker);
+                        return [parts[0], parts.slice(1).join(marker)];
+                    }
+                }
+                return [text, '']; 
             }, [question.question]);
+            
+            let inputClasses = 'inline-block mx-2 p-2 border-2 rounded-lg text-lg text-center shadow-sm transition duration-200 align-baseline w-48 font-mono';
+            if (isAnswered) {
+                const isSubmissionCorrect = inputValue.trim().toLowerCase() === question.correctAnswer.toLowerCase();
+                inputClasses += isSubmissionCorrect ? ' border-green-500 bg-green-50 font-bold' : ' border-red-500 bg-red-50 font-bold';
+            } else {
+                inputClasses += ' border-gray-300 focus:border-blue-500';
+            }
 
-            const isSubmissionCorrect = isAnswered && inputValue.trim().toLowerCase() === question.correctAnswer.toLowerCase();
+            const inputWidthStyle = {
+                width: `${Math.max(8, question.correctAnswer.length * 1.5)}rem`, 
+                maxWidth: '100%',
+            };
 
-            let inputClasses = `inline-block mx-2 p-2 border-2 rounded-lg text-lg text-center shadow-sm transition duration-200 align-baseline w-48 font-mono ${
-                isAnswered 
-                ? (isSubmissionCorrect ? 'border-green-500 bg-green-50 font-bold' : 'border-red-500 bg-red-50 font-bold')
-                : 'border-gray-300 focus:border-blue-500'
-            }`;
-
-            const placeholderLength = question.correctAnswer.length > 0 ? question.correctAnswer.length : 4;
-            const inputWidthStyle = { width: `${Math.max(8, placeholderLength * 1.5)}rem`, maxWidth: '100%' };
 
             return (
                 <div className="space-y-4">
-                    {question.type === 'multimedia' && <MediaDisplay question={question} showMessage={showMessage} />}
+                     {question.mediaType && <MediaDisplay question={question} showMessage={showMessage} />}
                     <div className="text-xl sm:text-2xl font-semibold mb-6 leading-relaxed text-center flex justify-center items-center flex-wrap">
-                        <span>{questionIndex + 1}. </span>
-                        {questionTextParts[0] && <span className="ml-1">{questionTextParts[0]}</span>}
+                        <span className="mr-2">{questionIndex + 1}.</span>
+                        {questionTextParts[0] && <span>{questionTextParts[0]}</span>}
                         <input
+                            ref={inputRef}
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             disabled={isAnswered}
-                            placeholder={isAnswered ? question.correctAnswer : "Điền từ/chữ"}
+                            placeholder={isAnswered ? question.correctAnswer : ""}
                             className={inputClasses}
                             style={inputWidthStyle}
                             onKeyPress={(e) => e.key === 'Enter' && !isAnswered && handleSubmitClick()}
@@ -380,16 +393,20 @@
                         onClick={handleSubmitClick}
                         disabled={isAnswered}
                         className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-300 hover:bg-green-700 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed active:scale-98"
-                    >Kiểm Tra</button>
+                    >
+                        Kiểm Tra
+                    </button>
                 </div>
             );
         };
         
-        // --- Component: MultipleChoiceQuestion ---
+        // --- Component: MultipleChoiceQuestion.tsx ---
         const MultipleChoiceQuestion = ({ question, isAnswered, onSubmit, showMessage, questionIndex }) => {
             const [selectedIndex, setSelectedIndex] = React.useState(null);
 
-            React.useEffect(() => setSelectedIndex(null), [question]);
+            React.useEffect(() => {
+                setSelectedIndex(null);
+            }, [question]);
 
             const handleSubmitClick = () => {
                 if (selectedIndex === null) {
@@ -399,15 +416,14 @@
                 const selectedOption = question.options[selectedIndex];
                 onSubmit(selectedOption.text, selectedOption.isCorrect);
             };
-            
-            const cleanQuestionText = question.question.replace(/^\d+\.\s*/, '');
 
             return (
                 <>
-                    {question.type === 'multimedia' && <MediaDisplay question={question} showMessage={showMessage} />}
+                    {question.mediaType && <MediaDisplay question={question} showMessage={showMessage} />}
+                    
                     <h3
                         className="text-xl sm:text-2xl font-semibold mb-6 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: `${questionIndex + 1}. ${cleanQuestionText}` }}
+                        dangerouslySetInnerHTML={{ __html: `${questionIndex + 1}. ${question.question.replace(/^\d+\.\s*/, '')}` }}
                     />
                     <div className="space-y-4">
                         <div className="space-y-3">
@@ -417,25 +433,35 @@
 
                                 if (isAnswered) {
                                     labelClasses += " cursor-default";
-                                    if (option.isCorrect) labelClasses += " bg-green-100 border-green-500 font-bold";
-                                    else if (isSelected) labelClasses += " bg-red-100 border-red-500 font-bold";
-                                    else labelClasses += " border-gray-200 opacity-60";
+                                    if (option.isCorrect) {
+                                        labelClasses += " bg-green-100 border-green-500 font-bold";
+                                    } else if (isSelected) {
+                                        labelClasses += " bg-red-100 border-red-500 font-bold";
+                                    } else {
+                                        labelClasses += " border-gray-200 opacity-60";
+                                    }
                                 } else {
                                     labelClasses += " cursor-pointer hover:bg-blue-50 hover:border-blue-300";
-                                    if(isSelected) labelClasses += " bg-blue-100 border-blue-500";
-                                    else labelClasses += " border-gray-200";
+                                    if(isSelected) {
+                                        labelClasses += " bg-blue-100 border-blue-500";
+                                    } else {
+                                        labelClasses += " border-gray-200";
+                                    }
                                 }
 
                                 return (
                                     <div key={index} className="relative">
                                         <input
-                                            type="radio" id={`option-${questionIndex}-${index}`} name={`mc-option-${questionIndex}`}
-                                            value={index} className="hidden" checked={isSelected}
-                                            onChange={() => setSelectedIndex(index)} disabled={isAnswered}
+                                            type="radio"
+                                            id={`option-${questionIndex}-${index}`}
+                                            name={`mc-option-${questionIndex}`}
+                                            value={index}
+                                            className="hidden"
+                                            checked={isSelected}
+                                            onChange={() => setSelectedIndex(index)}
+                                            disabled={isAnswered}
                                         />
-                                        <label htmlFor={`option-${questionIndex}-${index}`} className={labelClasses}>
-                                            {option.text}
-                                        </label>
+                                        <label htmlFor={`option-${questionIndex}-${index}`} className={labelClasses} dangerouslySetInnerHTML={{ __html: option.text }}></label>
                                     </div>
                                 );
                             })}
@@ -444,25 +470,40 @@
                             onClick={handleSubmitClick}
                             disabled={isAnswered}
                             className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-300 hover:bg-green-700 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed active:scale-98"
-                        >Kiểm Tra</button>
+                        >
+                            Kiểm Tra
+                        </button>
                     </div>
                 </>
             );
         };
         
-        // --- Component: RearrangeQuestion ---
+        // --- Component: RearrangeQuestion.tsx ---
         const WordBlock = ({ word, onClick, isSource, isAnswered }) => {
             const baseClasses = 'word-block px-3 py-2 text-base sm:text-lg font-semibold rounded-lg shadow-sm transition-all duration-150 break-words transform active:scale-95';
             const sourceClasses = isSource ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' : 'bg-gray-100 text-gray-800 border-b-2 border-gray-300';
             const disabledClasses = 'opacity-60 cursor-default shadow-inner';
             const interactiveClasses = 'cursor-pointer';
 
-            return <span onClick={!isAnswered ? onClick : undefined} className={`${baseClasses} ${sourceClasses} ${isAnswered ? disabledClasses : interactiveClasses}`}>{word.text}</span>;
+            return (
+                <span
+                    onClick={!isAnswered ? onClick : undefined}
+                    className={`${baseClasses} ${sourceClasses} ${isAnswered ? disabledClasses : interactiveClasses}`}
+                >
+                    {word.text}
+                </span>
+            );
         };
 
         const RearrangeQuestion = ({ question, isAnswered, onSubmit, showMessage, questionIndex, isCorrect }) => {
             const [sentenceWords, setSentenceWords] = React.useState([]);
-            const initialSourceWords = React.useMemo(() => [...question.words].map((text) => ({ id: crypto.randomUUID(), text })).sort(() => Math.random() - 0.5), [question]);
+            
+            const initialSourceWords = React.useMemo(() => {
+                return [...question.words]
+                    .map((text) => ({ id: crypto.randomUUID(), text })) 
+                    .sort(() => Math.random() - 0.5);
+            }, [question]);
+
             const [sourceWords, setSourceWords] = React.useState(initialSourceWords);
 
             React.useEffect(() => {
@@ -477,7 +518,7 @@
 
             const handleReturnWord = (word) => {
                 setSentenceWords(prev => prev.filter(w => w.id !== word.id));
-                setSourceWords(prev => [...prev, word].sort((a, b) => a.id.localeCompare(b.id)));
+                setSourceWords(prev => [...prev, word].sort((a, b) => initialSourceWords.findIndex(sw => sw.id === a.id) - initialSourceWords.findIndex(sw => sw.id === b.id)));
             };
 
             const handleSubmitClick = () => {
@@ -485,118 +526,173 @@
                     showMessage('Vui lòng sắp xếp các từ!', 'info');
                     return;
                 }
+                
                 const submitted = sentenceWords.map(w => w.text).join(' ').replace(/\s+([.,?!])/g, '$1').trim();
-                const normalize = (str) => str.replace(/[.,?!’']/g, '').replace(/\s+/g, ' ').toLowerCase().trim();
+                const normalize = (str) => str.replace(/’/g, "'").replace(/[.,?!]/g, '').replace(/\s+/g, ' ').toLowerCase().trim();
+                
                 const isCorrectResult = normalize(submitted) === normalize(question.correctAnswer);
                 onSubmit(submitted, isCorrectResult);
             };
-            
-            const cleanQuestionText = question.question.replace(/^\d+\.\s*/, '');
 
             return (
                 <>
-                    <h3 className="text-xl sm:text-2xl font-semibold mb-6 leading-relaxed" dangerouslySetInnerHTML={{ __html: `${questionIndex + 1}. ${cleanQuestionText}` }} />
+                    <h3
+                        className="text-xl sm:text-2xl font-semibold mb-6 leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: `${questionIndex + 1}. ${question.question.replace(/^\d+\.\s*/, '')}` }}
+                    />
                     <div className="space-y-4">
                         <div className={`min-h-[60px] p-3 border-2 rounded-xl shadow-inner flex flex-wrap gap-2 items-center transition duration-300 ${isAnswered ? (isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-blue-300 bg-blue-50 border-dashed'}`}>
                             {sentenceWords.length === 0 && !isAnswered ? (
-                                <span className="text-gray-500 italic text-sm">Chạm vào các từ bên dưới để xây dựng câu...</span>
+                                <span className="text-gray-500 italic text-sm">Chạm vào các từ bên dưới để xây dựng câu trả lời...</span>
                             ) : (
-                                sentenceWords.map(word => <WordBlock key={word.id} word={word} onClick={() => handleReturnWord(word)} isSource={false} isAnswered={isAnswered} />)
+                                sentenceWords.map(word => (
+                                    <WordBlock key={word.id} word={word} onClick={() => handleReturnWord(word)} isSource={false} isAnswered={isAnswered} />
+                                ))
                             )}
                         </div>
+                        
                         <div className="min-h-[100px] p-4 bg-gray-100 rounded-xl shadow-md flex flex-wrap gap-2 items-center border border-gray-200">
-                            {sourceWords.map(word => <WordBlock key={word.id} word={word} onClick={() => handleSelectWord(word)} isSource={true} isAnswered={isAnswered} />)}
+                            {sourceWords.map(word => (
+                                <WordBlock key={word.id} word={word} onClick={() => handleSelectWord(word)} isSource={true} isAnswered={isAnswered} />
+                            ))}
                         </div>
-                        <button onClick={handleSubmitClick} disabled={isAnswered} className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-300 hover:bg-green-700 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed active:scale-98">Kiểm Tra</button>
+                        <button
+                            onClick={handleSubmitClick}
+                            disabled={isAnswered}
+                            className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-300 hover:bg-green-700 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed active:scale-98"
+                        >
+                            Kiểm Tra
+                        </button>
                     </div>
                 </>
             );
         };
         
-        // --- Component: StartScreen ---
-        const StartScreen = ({ onStart }) => {
+        // --- Component: StartScreen.tsx ---
+        const StartScreen = ({ onStart, totalQuestions }) => {
             const [name, setName] = React.useState('');
-            const handleStart = () => name.trim() && onStart(name.trim());
+
+            const handleStart = () => {
+                if (name.trim()) {
+                    onStart(name.trim());
+                }
+            };
+
             const isButtonDisabled = name.trim() === '';
 
             return (
                 <div className="fade-in text-center p-4">
                     <header className="mb-8">
-                        <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">Bài Thi Thử IOE Lớp 4</h1>
-                        <p className="text-lg text-gray-500">Đề số 01: Kiến thức cơ bản ({questions.length} câu)</p>
+                        <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">Bài Thi Thử IOE Lớp 4 (ĐỀ SỐ 01)</h1>
+                        <p className="text-lg text-gray-500">Bộ đề luyện thi IOE dành cho khối 4</p>
                     </header>
                     <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-700">Chào mừng bạn!</h2>
-                        <p className="text-gray-600 mb-6">Mỗi câu trả lời đúng được cộng 10 điểm. Cố gắng hết mình nhé!</p>
+                        <p className="text-gray-600 mb-6">Mỗi câu trả lời đúng được cộng 10 điểm. Bài thi có {totalQuestions} câu.</p>
                         <div className="space-y-4">
                             <label htmlFor="player-name" className="block text-sm font-medium text-gray-700 text-left">Nhập tên của bạn để bắt đầu:</label>
                             <input
-                                type="text" id="player-name" placeholder="Tên người chơi"
+                                type="text"
+                                id="player-name"
+                                placeholder="Tên người chơi"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg shadow-sm transition duration-150"
-                                maxLength={50} value={name} onChange={(e) => setName(e.target.value)}
+                                maxLength={50}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && !isButtonDisabled && handleStart()}
                             />
                             <button
-                                onClick={handleStart} disabled={isButtonDisabled}
+                                onClick={handleStart}
+                                disabled={isButtonDisabled}
                                 className="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-lg transition duration-300 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-xl active:scale-98"
-                            >Bắt Đầu</button>
+                            >
+                                Bắt Đầu
+                            </button>
                         </div>
                     </div>
                 </div>
             );
         };
         
-        // --- Component: EndScreen (with Review Feature) ---
-        const EndScreen = ({ playerName, score, onRestart, mistakes }) => {
-            const [showReview, setShowReview] = React.useState(false);
-            const maxScore = questions.length * 10;
+        // --- Component: EndScreen.tsx ---
+        const EndScreen = ({ playerName, score, totalQuestions, onRestart, onReview }) => {
+            const maxScore = totalQuestions * 10;
             const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
-            const message = percentage >= 80 ? "Xuất sắc! Bạn làm rất tốt!" : percentage >= 50 ? "Khá tốt! Cố gắng hơn nữa nhé." : "Cần cố gắng thêm. Đừng nản lòng!";
+            
+            let encouragement = "Cố gắng hơn ở lần sau nhé!";
+            if (percentage >= 90) {
+                encouragement = "Xuất sắc! Bạn thật sự là một chuyên gia!";
+            } else if (percentage >= 70) {
+                encouragement = "Làm tốt lắm! Chỉ cần cố gắng thêm một chút nữa thôi.";
+            } else if (percentage >= 50) {
+                encouragement = "Khá tốt! Hãy tiếp tục ôn luyện nhé.";
+            }
 
             return (
                 <div className="text-center fade-in p-4">
-                    <h2 className="text-3xl font-bold mb-4 text-green-600">🎉 Hoàn Thành Bài Thi! 🎉</h2>
-                    <p className="text-xl text-gray-700 mb-2">Chúc mừng, <span className="font-extrabold text-blue-600">{playerName}</span>!</p>
-                    <p className="text-lg text-gray-600 mb-6">{message}</p>
+                    <h2 className="text-3xl font-bold mb-2 text-green-600">🎉 Hoàn Thành! 🎉</h2>
+                    <p className="text-xl text-gray-700 mb-4">
+                        Chúc mừng, <span className="font-extrabold text-blue-600">{playerName}</span>!
+                    </p>
+                     <p className="text-lg text-gray-600 mb-6">{encouragement}</p>
                     <div className="bg-white p-8 rounded-xl shadow-lg inline-block border border-gray-100">
-                        <p className="text-2xl font-semibold mb-8 text-gray-700">Điểm số cuối cùng của bạn:</p>
-                        <p className={`text-6xl font-black mb-10 text-blue-600`}>{score} / {maxScore}</p>
+                        <p className="text-2xl font-semibold mb-8 text-gray-700">Điểm số cuối cùng:</p>
+                        <p className={`text-6xl font-black mb-10 text-blue-700`}>
+                            {score} / {maxScore}
+                        </p>
                     </div>
-                    <div className="mt-8 space-x-4">
+                    <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                        {onReview && (
+                             <button
+                                onClick={onReview}
+                                className="py-3 px-6 bg-yellow-500 text-white font-bold rounded-xl shadow-lg transition duration-300 hover:bg-yellow-600 text-lg active:scale-98"
+                            >
+                                Xem lại câu sai
+                            </button>
+                        )}
                         <button
                             onClick={onRestart}
                             className="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-lg transition duration-300 hover:bg-blue-600 text-lg active:scale-98"
-                        >Làm lại</button>
-                        {mistakes.length > 0 && (
-                            <button
-                                onClick={() => setShowReview(!showReview)}
-                                className="py-3 px-6 bg-red-500 text-white font-bold rounded-xl shadow-lg transition duration-300 hover:bg-red-600 text-lg active:scale-98"
-                            >{showReview ? 'Ẩn câu sai' : `Xem lại ${mistakes.length} câu sai`}</button>
-                        )}
+                        >
+                            Làm lại bài thi
+                        </button>
                     </div>
+                </div>
+            );
+        };
 
-                    {showReview && (
-                        <div className="mt-8 text-left border-t pt-6">
-                            <h3 className="text-2xl font-bold text-red-600 mb-4 text-center">Xem lại các câu sai</h3>
-                            <div className="space-y-6">
-                                {mistakes.map((mistake, index) => (
-                                    <div key={index} className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-                                        <p className="font-semibold text-gray-800 mb-2" dangerouslySetInnerHTML={{ __html: `${index + 1}. ${mistake.question.question}`}} />
-                                        <p><strong>Câu trả lời của bạn:</strong> <span className="text-red-700 font-medium">{mistake.submittedAnswer}</span></p>
-                                        <p><strong>Đáp án đúng:</strong> <span className="text-green-700 font-medium">{mistake.question.correctAnswer}</span></p>
-                                        <p className="mt-2 text-sm text-gray-600"><em>{mistake.question.rationale_vi}</em></p>
-                                    </div>
-                                ))}
+        // --- Component: ReviewScreen.tsx ---
+        const ReviewScreen = ({ incorrectAnswers, onBack }) => {
+            return (
+                <div className="fade-in">
+                    <header className="text-center mb-8">
+                        <h1 className="text-3xl sm:text-4xl font-extrabold text-yellow-600 mb-2">Ôn tập các câu sai</h1>
+                    </header>
+                    <div className="space-y-8">
+                        {incorrectAnswers.map(({ question, submittedAnswer }, index) => (
+                            <div key={index} className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                                <h3 className="text-xl sm:text-2xl font-semibold mb-4 leading-relaxed"
+                                    dangerouslySetInnerHTML={{ __html: `${index + 1}. ${question.question.replace(/^\d+\.\s*/, '')}` }}
+                                />
+                                {question.mediaType && <MediaDisplay question={question} showMessage={() => {}} />}
+                                <RationaleBox question={question} isCorrect={false} submittedAnswer={submittedAnswer} />
                             </div>
-                        </div>
-                    )}
+                        ))}
+                    </div>
+                    <div className="mt-8 text-center">
+                        <button
+                            onClick={onBack}
+                            className="py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-lg transition duration-300 hover:bg-blue-600 text-lg active:scale-98"
+                        >
+                            Quay lại màn hình điểm
+                        </button>
+                    </div>
                 </div>
             );
         };
         
-        // --- Component: QuizScreen (with Mistakes Tracking) ---
-        const QuizScreen = ({ playerName, onEnd }) => {
-            const [shuffledQuestions, setShuffledQuestions] = React.useState([]);
+        // --- Component: QuizScreen.tsx ---
+        const QuizScreen = ({ playerName, onEnd, totalQuestions, questionSet }) => {
             const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
             const [score, setScore] = React.useState(0);
             const [isAnswered, setIsAnswered] = React.useState(false);
@@ -604,20 +700,15 @@
             const [submittedAnswer, setSubmittedAnswer] = React.useState('');
             const [isHintVisible, setIsHintVisible] = React.useState(false);
             const [message, setMessage] = React.useState(null);
-            const [mistakes, setMistakes] = React.useState([]);
+            const incorrectAnswersRef = React.useRef([]);
+
+            const currentQuestion = questionSet[currentQuestionIndex];
 
             React.useEffect(() => {
-                const array = [...questions];
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                setShuffledQuestions(array);
-            }, []);
+                incorrectAnswersRef.current = [];
+            }, [questionSet]);
 
-            const currentQuestion = shuffledQuestions[currentQuestionIndex];
-
-            React.useEffect(() => {
+             React.useEffect(() => {
                 setIsAnswered(false);
                 setIsCorrect(false);
                 setSubmittedAnswer('');
@@ -625,9 +716,11 @@
                 setMessage(null);
             }, [currentQuestionIndex]);
             
-            const showMessage = (text, type) => setMessage({ text, type });
+            const showMessage = (text, type) => {
+                setMessage({ text, type });
+            };
 
-            const handleSubmit = React.useCallback((answer, isAnswerCorrect) => {
+            const handleSubmit = (answer, isAnswerCorrect) => {
                 if (isAnswered) return;
                 
                 setIsAnswered(true);
@@ -638,16 +731,16 @@
                     setScore(prev => prev + 10);
                     showMessage('CHÍNH XÁC! +10 điểm', 'success');
                 } else {
-                    showMessage('SAI RỒI! Cùng xem lại nhé.', 'error');
-                    setMistakes(prev => [...prev, { question: currentQuestion, submittedAnswer: answer }]);
+                    showMessage('SAI RỒI! Hãy xem lại nhé.', 'error');
+                    incorrectAnswersRef.current.push({ question: currentQuestion, submittedAnswer: answer });
                 }
-            }, [isAnswered, currentQuestion]);
+            };
 
             const handleNext = () => {
-                if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                if (currentQuestionIndex < totalQuestions - 1) {
                     setCurrentQuestionIndex(prev => prev + 1);
                 } else {
-                    onEnd(score, mistakes);
+                    onEnd(score, incorrectAnswersRef.current);
                 }
             };
 
@@ -655,15 +748,27 @@
                 return <div className="text-center p-8">Đang tải câu hỏi...</div>;
             }
 
-            const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+            const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
             
             const renderQuestionComponent = () => {
-                const commonProps = { isAnswered, onSubmit: handleSubmit, showMessage, questionIndex: currentQuestionIndex, isCorrect };
-                const questionType = currentQuestion.type;
+                const commonProps = {
+                    question: currentQuestion,
+                    isAnswered,
+                    onSubmit: handleSubmit,
+                    showMessage,
+                    questionIndex: currentQuestionIndex,
+                    isCorrect: isCorrect, 
+                };
 
-                if (questionType === 'rearrange') return <RearrangeQuestion {...commonProps} question={currentQuestion} />;
-                if (questionType === 'mc' || (questionType === 'multimedia' && currentQuestion.options)) return <MultipleChoiceQuestion {...commonProps} question={currentQuestion} />;
-                if (questionType === 'fill-in-the-blank' || (questionType === 'multimedia' && !currentQuestion.options)) return <FillInTheBlankQuestion {...commonProps} question={currentQuestion} />;
+                if (currentQuestion.type === 'rearrange') {
+                    return <RearrangeQuestion {...commonProps} />;
+                }
+                if (currentQuestion.type === 'mc' || (currentQuestion.type === 'multimedia' && currentQuestion.options)) {
+                    return <MultipleChoiceQuestion {...commonProps} />;
+                }
+                if (currentQuestion.type === 'fill-in-the-blank' || (currentQuestion.type === 'multimedia' && !currentQuestion.options)) {
+                    return <FillInTheBlankQuestion {...commonProps} />;
+                }
                 
                 return <div className="text-red-500">Lỗi: Loại câu hỏi không xác định.</div>;
             };
@@ -672,68 +777,121 @@
                 <div className="fade-in">
                     {message && <MessageBox message={message.text} type={message.type} />}
                     <header className="text-center mb-8">
-                        <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">Bài Thi Thử IOE Lớp 4</h1>
+                        <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-2">Bài Thi Thử IOE Lớp 4 (ĐỀ SỐ 01)</h1>
                         <ProgressBar percentage={progressPercentage} />
                     </header>
 
                     <div className="flex justify-between items-center mb-6 py-2 px-4 bg-blue-50 rounded-xl shadow-inner border border-blue-100">
                         <p className="text-sm sm:text-base font-medium text-blue-800">Người chơi: <span className="font-bold">{playerName}</span></p>
                         <p className="text-sm sm:text-base font-medium text-blue-800">Điểm: <span className="text-xl font-extrabold text-red-600">{score}</span></p>
-                        <p className="text-sm sm:text-base font-medium text-blue-800">Câu: <span className="font-bold">{currentQuestionIndex + 1}/{questions.length}</span></p>
+                        <p className="text-sm sm:text-base font-medium text-blue-800">Câu: <span className="font-bold">{currentQuestionIndex + 1}/{totalQuestions}</span></p>
                     </div>
 
-                    <div className="mb-8">{renderQuestionComponent()}</div>
+                    <div className="mb-8">
+                        {renderQuestionComponent()}
+                    </div>
 
                     <div className="mt-8 border-t pt-6 flex justify-between items-center flex-wrap gap-4">
                         <div className="relative">
                             <button
                                 className="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-yellow-600 active:scale-95"
-                                onMouseEnter={() => setIsHintVisible(true)} onMouseLeave={() => setIsHintVisible(false)}
-                            >Gợi ý</button>
+                                onMouseEnter={() => setIsHintVisible(true)}
+                                onMouseLeave={() => setIsHintVisible(false)}
+                                onTouchStart={() => setIsHintVisible(true)}
+                                onTouchEnd={() => setIsHintVisible(false)}
+                            >
+                                Gợi ý
+                            </button>
                             <div className={`absolute bottom-full mb-2 w-max max-w-[90vw] sm:max-w-sm p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-xl shadow-lg transition-all duration-300 transform origin-bottom-left ${isHintVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}>
                                 <p className="font-semibold text-yellow-800">Gợi ý:</p>
                                 <p className="text-yellow-700">{currentQuestion.hint_vi || 'Không có gợi ý.'}</p>
                             </div>
                         </div>
+                        
                         <button onClick={handleNext} disabled={!isAnswered} className="flex-grow py-3 px-4 bg-blue-500 text-white font-bold rounded-xl shadow-xl transition duration-300 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed active:scale-98">
-                            {currentQuestionIndex === shuffledQuestions.length - 1 ? 'Hoàn Thành' : 'Câu Tiếp Theo »'}
+                            {currentQuestionIndex === totalQuestions - 1 ? 'Hoàn thành' : 'Câu tiếp theo'}
                         </button>
                     </div>
 
-                    {isAnswered && <RationaleBox question={currentQuestion} isCorrect={isCorrect} submittedAnswer={submittedAnswer} />}
+                    {isAnswered && (
+                        <RationaleBox question={currentQuestion} isCorrect={isCorrect} submittedAnswer={submittedAnswer} />
+                    )}
                 </div>
             );
         };
         
-        // --- Component: App ---
+        // --- Component: App.tsx ---
         const App = () => {
             const [gameState, setGameState] = React.useState('start');
             const [playerName, setPlayerName] = React.useState('');
             const [score, setScore] = React.useState(0);
-            const [mistakes, setMistakes] = React.useState([]);
+            const [shuffledQuestions, setShuffledQuestions] = React.useState([]);
+            const [incorrectAnswers, setIncorrectAnswers] = React.useState([]);
 
-            const handleStartQuiz = React.useCallback((name) => {
+            React.useEffect(() => {
+                const array = [...questions];
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                setShuffledQuestions(array);
+            }, []);
+
+            const handleStartQuiz = (name) => {
                 setPlayerName(name);
                 setScore(0);
-                setMistakes([]);
+                setIncorrectAnswers([]);
                 setGameState('quiz');
-            }, []);
+            };
 
-            const handleEndQuiz = React.useCallback((finalScore, finalMistakes) => {
+            const handleEndQuiz = (finalScore, mistakes) => {
                 setScore(finalScore);
-                setMistakes(finalMistakes);
+                setIncorrectAnswers(mistakes);
                 setGameState('end');
-            }, []);
+            };
             
-            const handleRestartQuiz = React.useCallback(() => {
+            const handleRestartQuiz = () => {
+                 const array = [...questions];
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                setShuffledQuestions(array);
                 setGameState('start');
-            }, []);
+            };
+
+            const handleReview = () => {
+                setGameState('review');
+            };
+
+             const handleBackToEndScreen = () => {
+                setGameState('end');
+            };
 
             const renderContent = () => {
                 switch (gameState) {
-                    case 'quiz': return <QuizScreen playerName={playerName} onEnd={handleEndQuiz} />;
-                    case 'end': return <EndScreen playerName={playerName} score={score} onRestart={handleRestartQuiz} mistakes={mistakes} />;
-                    default: return <StartScreen onStart={handleStartQuiz} />;
+                    case 'quiz':
+                        return <QuizScreen 
+                                    playerName={playerName} 
+                                    onEnd={handleEndQuiz} 
+                                    totalQuestions={shuffledQuestions.length}
+                                    questionSet={shuffledQuestions}
+                                />;
+                    case 'end':
+                        return <EndScreen 
+                                    playerName={playerName} 
+                                    score={score} 
+                                    totalQuestions={shuffledQuestions.length}
+                                    onRestart={handleRestartQuiz} 
+                                    onReview={incorrectAnswers.length > 0 ? handleReview : null}
+                                />;
+                    case 'review':
+                        return <ReviewScreen 
+                                    incorrectAnswers={incorrectAnswers}
+                                    onBack={handleBackToEndScreen}
+                                />;
+                    default:
+                         return <StartScreen onStart={handleStartQuiz} totalQuestions={questions.length} />;
                 }
             };
 
@@ -746,9 +904,9 @@
             );
         };
         
-        // --- Entry point ---
+        // --- Entry point from index.tsx ---
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<React.StrictMode><App /></React.StrictMode>);
+        root.render(<App />);
 
     </script>
 </body>
