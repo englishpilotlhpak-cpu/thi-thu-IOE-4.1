@@ -1022,8 +1022,8 @@
                 correctAnswer: 'C. How’s',
                 correctAnswer_vi: 'Thời tiết thế nào',
                 hint_vi: 'Câu hỏi về thời tiết.',
-                rationale_vi: 'Câu hỏi "How’s the weather?" dùng để hỏi về tình hình thời tiết.',
-                rationale_en: 'The question "How’s the weather?" is used to ask about weather conditions.'
+                rationale_vi: 'Câu hỏi "How’s the weather?" dùng để hỏi về tình hình thời tiết. "What\'s the weather like?" cũng đúng nhưng không có trong phương án.',
+                rationale_en: 'The question "How’s the weather?" is used to ask about weather conditions. "What\'s the weather like?" is also correct but not an option.'
             },
             {
                 type: 'mc',
@@ -1617,14 +1617,14 @@
                         <p className="text-xl text-gray-500">Bộ đề luyện thi IOE dành cho khối 4</p>
                     </header>
                     <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                        <h2 className="text-2xl font-bold mb-4 text-gray-700">Chào mừng bé!</h2>
+                        <h2 className="text-2xl font-bold mb-4 text-gray-700">Chào mừng bạn!</h2>
                         <p className="text-gray-600 mb-6 text-lg">Mỗi câu trả lời đúng được cộng 10 điểm. Bài thi có {totalQuestions} câu.</p>
                         <div className="space-y-4">
-                            <label htmlFor="player-name" className="block text-base font-medium text-gray-700 text-left">Nhập tên của bé để bắt đầu:</label>
+                            <label htmlFor="player-name" className="block text-base font-medium text-gray-700 text-left">Nhập tên của bạn để bắt đầu:</label>
                             <input
                                 type="text"
                                 id="player-name"
-                                placeholder="Tên của bé"
+                                placeholder="Tên của bạn"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg shadow-sm transition duration-150"
                                 maxLength={50}
                                 value={name}
@@ -1651,7 +1651,7 @@
             
             let encouragement = "Cố gắng hơn ở lần sau nhé!";
             if (percentage >= 90) {
-                encouragement = "Xuất sắc! Bé thật là giỏi!";
+                encouragement = "Xuất sắc! Bạn thật là giỏi!";
             } else if (percentage >= 70) {
                 encouragement = "Làm tốt lắm! Chỉ cần cố gắng thêm một chút nữa thôi.";
             } else if (percentage >= 50) {
@@ -1665,11 +1665,11 @@
                         Chúc mừng, <span className="font-extrabold text-blue-600">{playerName}</span>!
                     </p>
                     <p className="text-xl text-gray-600 mb-4">
-                        Bé đã hoàn thành bài thi <span className="font-bold text-blue-600">{testName}</span>.
+                        Bạn đã hoàn thành bài thi <span className="font-bold text-blue-600">{testName}</span>.
                     </p>
                      <p className="text-lg text-gray-500 mb-6">{encouragement}</p>
                     <div className="bg-white p-8 rounded-xl shadow-lg inline-block border border-gray-100">
-                        <p className="text-2xl font-bold mb-8 text-gray-700">Điểm số của bé:</p>
+                        <p className="text-2xl font-bold mb-8 text-gray-700">Điểm số của bạn:</p>
                         <p className={`text-7xl font-black mb-10 text-blue-700`}>
                             {score} / {maxScore}
                         </p>
@@ -1816,7 +1816,7 @@
                     </header>
 
                     <div className="flex justify-between items-center mb-6 py-2 px-4 bg-blue-50 rounded-xl shadow-inner border border-blue-100">
-                        <p className="text-lg font-medium text-blue-800">Bé: <span className="font-bold">{playerName}</span></p>
+                        <p className="text-lg font-medium text-blue-800">Bạn: <span className="font-bold">{playerName}</span></p>
                         <p className="text-lg font-medium text-blue-800">Điểm: <span className="text-2xl font-extrabold text-red-600">{score}</span></p>
                         <p className="text-lg font-medium text-blue-800">Câu: <span className="font-bold">{currentQuestionIndex + 1}/{totalQuestions}</span></p>
                     </div>
